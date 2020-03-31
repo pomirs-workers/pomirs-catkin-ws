@@ -7,8 +7,8 @@ from geometry_msgs.msg import Point
 
 sio = socketio.Server(cors_allowed_origins='*')
 app = socketio.WSGIApp(sio)
-poi_pub = rospy.Publisher('points', Point)
-rospy.init_node('connector')
+poi_pub = rospy.Publisher('points', Point, queue_size=10)
+rospy.init_node('catchbot/connector')
 
 
 @sio.event
@@ -23,8 +23,12 @@ def disconnect(sid):
 
 @sio.on('point')
 def get_point(sid, data):
-    print(sid, data)
+    print('Point', sid, data)
     point_msg = Point()
+    xyz = data.split(';')
+    point_msg.x = xyz[0]
+    point_msg.y = xyz[1]
+    point_msg.z = xyz[2]
     poi_pub.publish(point_msg)
 
 
