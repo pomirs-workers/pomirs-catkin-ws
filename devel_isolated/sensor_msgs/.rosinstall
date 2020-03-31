@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/pi/pomirs_ws/devel_isolated/sensor_msgs/setup.sh
