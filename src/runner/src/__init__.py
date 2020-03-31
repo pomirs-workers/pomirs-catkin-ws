@@ -1,2 +1,4 @@
-from catch-bot/CatchBot import CatchBot
+from catch_bot.CatchBot import CatchBot
 
+print('Testing...')
+CatchBot.test()
