@@ -943,8 +943,8 @@ clean: CMakeFiles/geometry_msgs_generate_messages_py.dir/clean
 # Target rules for target CMakeFiles/stereo_msgs_generate_messages_nodejs.dir
 
 # All Build rule for target.
-CMakeFiles/stereo_msgs_generate_messages_nodejs.dir/all: CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/all
 CMakeFiles/stereo_msgs_generate_messages_nodejs.dir/all: CMakeFiles/std_msgs_generate_messages_nodejs.dir/all
+CMakeFiles/stereo_msgs_generate_messages_nodejs.dir/all: CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/all
 CMakeFiles/stereo_msgs_generate_messages_nodejs.dir/all: CMakeFiles/_stereo_msgs_generate_messages_check_deps_DisparityImage.dir/all
 	$(MAKE) -f CMakeFiles/stereo_msgs_generate_messages_nodejs.dir/build.make CMakeFiles/stereo_msgs_generate_messages_nodejs.dir/depend
 	$(MAKE) -f CMakeFiles/stereo_msgs_generate_messages_nodejs.dir/build.make CMakeFiles/stereo_msgs_generate_messages_nodejs.dir/build

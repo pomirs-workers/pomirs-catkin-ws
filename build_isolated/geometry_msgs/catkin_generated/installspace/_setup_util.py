@@ -270,7 +270,7 @@ if __name__ == '__main__':
 
         if not args.local:
             # environment at generation time
-            CMAKE_PREFIX_PATH = '/home/pi/pomirs_ws/devel_isolated/diagnostic_msgs;/home/pi/pomirs_ws/devel_isolated/common_msgs;/home/pi/pomirs_ws/devel_isolated/actionlib_msgs;/opt/ros/kinetic'.split(';')
+            CMAKE_PREFIX_PATH = '/home/pi/pomirs_ws/devel_isolated/diagnostic_msgs;/home/pi/pomirs_ws/devel_isolated/common_msgs;/home/pi/pomirs_ws/devel_isolated/actionlib_msgs;/home/pi/pomirs_ws/devel;/opt/ros/kinetic'.split(';')
         else:
             # don't consider any other prefix path than this one
             CMAKE_PREFIX_PATH = []

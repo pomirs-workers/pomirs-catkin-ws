@@ -8,5 +8,8 @@
 
 # modified environment variables
 export CMAKE_PREFIX_PATH="/home/pi/pomirs_ws/devel_isolated/geometry_msgs:$CMAKE_PREFIX_PATH"
+export LD_LIBRARY_PATH="/home/pi/pomirs_ws/devel_isolated/geometry_msgs/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/home/pi/pomirs_ws/devel_isolated/geometry_msgs/lib/pkgconfig:$PKG_CONFIG_PATH"
+export PYTHONPATH="/home/pi/pomirs_ws/devel_isolated/geometry_msgs/lib/python2.7/dist-packages:$PYTHONPATH"
 export ROSLISP_PACKAGE_DIRECTORIES="/home/pi/pomirs_ws/devel_isolated/geometry_msgs/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
 export ROS_PACKAGE_PATH="/home/pi/pomirs_ws/src/common_msgs/geometry_msgs:$ROS_PACKAGE_PATH"

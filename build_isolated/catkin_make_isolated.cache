@@ -1,2 +1,2 @@
-common_msgs/actionlib_msgs:common_msgs/common_msgs:common_msgs/diagnostic_msgs:common_msgs/geometry_msgs:common_msgs/nav_msgs:common_msgs/sensor_msgs:common_msgs/shape_msgs:common_msgs/stereo_msgs:common_msgs/trajectory_msgs:common_msgs/visualization_msgs:connector
+common_msgs/actionlib_msgs:common_msgs/common_msgs:common_msgs/diagnostic_msgs:common_msgs/geometry_msgs:common_msgs/nav_msgs:common_msgs/sensor_msgs:common_msgs/shape_msgs:common_msgs/stereo_msgs:common_msgs/trajectory_msgs:common_msgs/visualization_msgs:connector:runner
 -G Unix Makefiles -DCATKIN_DEVEL_PREFIX=/home/pi/pomirs_ws/devel_isolated -DCMAKE_INSTALL_PREFIX=/home/pi/pomirs_ws/install_isolated

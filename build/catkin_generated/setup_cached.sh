@@ -7,9 +7,4 @@
 # new environment variables
 
 # modified environment variables
-export CMAKE_PREFIX_PATH="/home/pi/pomirs_ws/devel:$CMAKE_PREFIX_PATH"
-export LD_LIBRARY_PATH="/home/pi/pomirs_ws/devel/lib:$LD_LIBRARY_PATH"
-export PATH="/opt/ros/kinetic/bin:/home/pi/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games"
 export PWD="/home/pi/pomirs_ws/build"
-export ROSLISP_PACKAGE_DIRECTORIES="/home/pi/pomirs_ws/devel/share/common-lisp"
-export ROS_PACKAGE_PATH="/home/pi/pomirs_ws/src:$ROS_PACKAGE_PATH"

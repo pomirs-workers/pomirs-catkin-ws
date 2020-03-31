@@ -8,5 +8,7 @@
 
 # modified environment variables
 export CMAKE_PREFIX_PATH="/home/pi/pomirs_ws/devel_isolated/connector:$CMAKE_PREFIX_PATH"
+export LD_LIBRARY_PATH="/home/pi/pomirs_ws/devel_isolated/connector/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/home/pi/pomirs_ws/devel_isolated/connector/lib/pkgconfig:$PKG_CONFIG_PATH"
 export ROSLISP_PACKAGE_DIRECTORIES="/home/pi/pomirs_ws/devel_isolated/connector/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
 export ROS_PACKAGE_PATH="/home/pi/pomirs_ws/src/connector:$ROS_PACKAGE_PATH"

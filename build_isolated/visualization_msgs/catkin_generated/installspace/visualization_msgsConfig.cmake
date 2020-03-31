@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/pi/pomirs_ws/install_isolated/lib;/home/pi/pomirs_ws/devel_isolated/trajectory_msgs/lib;/home/pi/pomirs_ws/devel_isolated/stereo_msgs/lib;/home/pi/pomirs_ws/devel_isolated/shape_msgs/lib;/home/pi/pomirs_ws/devel_isolated/sensor_msgs/lib;/home/pi/pomirs_ws/devel_isolated/nav_msgs/lib;/home/pi/pomirs_ws/devel_isolated/connector/lib;/home/pi/pomirs_ws/devel_isolated/geometry_msgs/lib;/home/pi/pomirs_ws/devel_isolated/diagnostic_msgs/lib;/home/pi/pomirs_ws/devel_isolated/common_msgs/lib;/home/pi/pomirs_ws/devel_isolated/actionlib_msgs/lib;/opt/ros/kinetic/lib)
+    foreach(path /home/pi/pomirs_ws/install_isolated/lib;/home/pi/pomirs_ws/devel_isolated/trajectory_msgs/lib;/home/pi/pomirs_ws/devel_isolated/stereo_msgs/lib;/home/pi/pomirs_ws/devel_isolated/shape_msgs/lib;/home/pi/pomirs_ws/devel_isolated/sensor_msgs/lib;/home/pi/pomirs_ws/devel_isolated/runner/lib;/home/pi/pomirs_ws/devel_isolated/nav_msgs/lib;/home/pi/pomirs_ws/devel_isolated/connector/lib;/home/pi/pomirs_ws/devel_isolated/geometry_msgs/lib;/home/pi/pomirs_ws/devel_isolated/diagnostic_msgs/lib;/home/pi/pomirs_ws/devel_isolated/common_msgs/lib;/home/pi/pomirs_ws/devel_isolated/actionlib_msgs/lib;/home/pi/pomirs_ws/devel/lib;/opt/ros/kinetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
