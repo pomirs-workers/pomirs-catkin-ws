@@ -22,5 +22,5 @@ def get_point(sid, data):
     print(sid, data)
 
 
-eventlet.wsgi.server(eventlet.listen(('', 8765)), app)
 print('CatchBot listens on 8765 port :)')
+eventlet.wsgi.server(eventlet.listen(('', 8765)), app)
