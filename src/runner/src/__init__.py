@@ -12,9 +12,9 @@ config_1 = {
 	'log': True,
 	'm_a': 37,
 	'm_b': 35,
-	'en_a': 31,
-	'en_b': 33,
-	'pin_pwm': 27,
+	'en_a': 24,
+	'en_b': 26,
+	'pin_pwm': 4,
 	'deg_per_tick': 37.5
 }
 
@@ -22,21 +22,15 @@ config_2 = {
 	'log': True,
 	'm_a': 38,
 	'm_b': 36,
-	'en_a': 24,
-	'en_b': 26,
-	'pin_pwm': 4,
+	'en_a': 31,
+	'en_b': 33,
+	'pin_pwm': 27,
 	'deg_per_tick': 37.5
 }
 
 
 left = Motor(config_1)
 right = Motor(config_2)
-
-right.stop()
-left.stop()
-
-right.go(1)
-left.go(1)
 
 _old_excepthook = sys.excepthook
 def myexcepthook(exctype, value, traceback):
@@ -48,6 +42,8 @@ def myexcepthook(exctype, value, traceback):
         _old_excepthook(exctype, value, traceback)
 sys.excepthook = myexcepthook
 
+right.go(-0)
+left.go(0)
 
 while not rospy.is_shutdown():
 	right.update()
