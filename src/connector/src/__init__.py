@@ -26,9 +26,9 @@ def get_point(sid, data):
     print('Point', sid, data)
     point_msg = Point()
     xyz = data.split(';')
-    point_msg.x = xyz[0]
-    point_msg.y = xyz[1]
-    point_msg.z = xyz[2]
+    point_msg.x = float(xyz[0])
+    point_msg.y = float(xyz[1])
+    point_msg.z = float(xyz[2])
     poi_pub.publish(point_msg)
 
 
