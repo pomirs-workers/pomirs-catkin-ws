@@ -33,7 +33,7 @@ right = Motor(config_2)
 
 x0 = 20
 y0 = 20
-rk = 22
+rk = 6
 
 def get_arc(angle):
   return (2 * rk * pi) * (angle / (2 * pi))
