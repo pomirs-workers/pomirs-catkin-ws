@@ -3,6 +3,9 @@
 import rospy
 from geometry_msgs.msg import Point
 from lib.catch_bot.motor import Motor
+import numpy as np
+import time
+from math import atan2, sqrt, cos
 
 Motor.apply_requirements()
 Motor.unlock_all()
@@ -32,118 +35,69 @@ left = Motor(config_1)
 right = Motor(config_2)
 
 
+def navigate(xEND, yEND):
+  radwheel = 0.03
+  prevPath = 0
+  course = np.pi / 2
+  width = 0.3
+  previousTime = 0
+  angleL = left.get_angle()
+  angleR = right.get_angle()
+  deg2rad = 0.0174533
+  K_I = 50
+
+
+  left = Motor(config_1)
+  right = Motor(config_2)
+  xCoord = 100
+  yCoord = 100
+
+  intLength = 0
+
+  while True:
+    currentTime = time.time
+    dt = currentTime - previousTime
+    gyroSpeed = (left.get_angle() - angleL + right.get_angle() - angleR) * radwheel / dt / width / 2
+    path = (angleR + angleL) / 2 * radwheel
+    delthaPath = path - prevPath
+    prevPath = path
+    course = course + gyroSpeed * deg2rad * dt
+    xCoord = xCoord + delthaPath * np.cos(course)
+    yCoord = yCoord + delthaPath * np.sin(course)
+    delthaX = xEND - xCoord
+    delthaY = yEND - yCoord
+    bearing = atan2(delthaY, delthaX)
+    courseAngle = bearing - course
+    if np.abs(courseAngle) > np.pi:
+      courseAngle = courseAngle - np.sign(courseAngle) * 2 * np.pi
+
+    length = sqrt(delthaY * delthaY + delthaX * delthaX)
+    intLength = intLength + length * dt
+
+    baseSpeed = 100 * np.tanh(length) * cos(courseAngle) + K_I * intLength
+
+    control = courseAngle + np.sin(courseAngle) * baseSpeed / length
+
+    if np.abs(control) > 30:
+      control = np.sign(control) * 30
+
+    pwmLeft = baseSpeed + control
+    pwmRight = baseSpeed - control
+
+    if np.abs(pwmLeft) > 1:
+      pwmLeft = np.sign(pwmLeft) * 1
+    if np.abs(pwmRight) > 1:
+      pwmLeft = np.sign(pwmRight) * 1
+
+    left.go(pwmLeft)
+    right.go(pwmRight)
+
+    previousTime = currentTime
+    angleL = left.get_angle()
+    angleR = right.get_angle()
+
 def get_point_handler(point):
-	#константы
-	Y = 200
-	X = 200
-	H = 22.5
-	Rk = 3.25
-	#получение траектории 
-	x1 = point.x
-	y1 = point.y
-	while x1 == point.x and y1 == point.y:
-		time.sleep(0.1)
-	x2 = point.x
-	y2 = point.y
-	xn = X / 2
-	yn = Y / 2
-	#получение точки перпендикуляра
-	x4=((x2-x1)*(y2-y1)*(yn-y1)+x1*pow(y2-y1, 2)+xn*pow(x2-x1, 2))/(pow(y2-y1, 2)+pow(x2-x1, 2))
-	y4=(y2-y1)*(x4-x1)/(x2-x1)+y1
-
-	Tx = xn - x4
-	Ty = yn - y4
-#Поиск длины пути до цели
-	D = math.sqrt(Tx**2 + Ty**2)
-#Поиск кратчайшего угла поворота
-	A = math.atan(np.abs(Tx)/np.abs(Ty))
-	if Ty > 0:
-		A = np.pi - A
-	if x4 > xn:
-		A = A * (-1)
-
-	Angle = A * H * 180 / (2 * Rk * np.pi)
-	D_angle = 0
-
-	e = Angle
-	mist = 15 #ошибка энкодера
-	while np.abs(e) > mist :
-		u = e / Angle
-		if A > 0:
-			ur = u
-			ul = -1 * u
-		else:
-			ur = u
-			ul = -1 * u
-		lel = left.get_angle
-		rel = right.get.angle
-		left.go(ul)
-		right.go(ur)
-		left.update()
-		right.update()
-		le = left.get_angle
-		re = right.get.angle
-		D_right = rel - re
-		D_left = lel - le
-		e -= np.abs(D_right) #Или D_right, если они равны. Должны быть равны, иначе пока хз как это считать
-	left.stop()
-	right.stop()
-
-	s = 0
-	while D - s > 0:
-		u = (D - s) / D
-		lel = left.get_angle
-		rel = right.get.angle
-		left.go(u)
-		right.go(u)
-		left.update()
-		right.update()
-		le = left.get_angle
-		re = right.get.angle
-		D_right = rel - re
-		D_left = lel - le
-		s = 2 * np.pi * Rk * D_right/360
-	left.stop()
-	right.stop()
-
-	if ((y2 - y1) * (x4 - xn) - (x2 - x1) * (y4 - yn)) > 0:
-		A = 90
-	elif ((y2 - y1) * (x4 - xn) - (x2 - x1) * (y4 - yn)) < 0:
-		A = -90
-
-	Angle = A * H * 180 / (2 * Rk * np.pi)
-	e = Angle
-	mist = 15 #ошибка энкодера
-	while np.abs(e) > mist :
-		u = e / Angle
-		if A > 0:
-			ur = u
-			ul = -1 * u
-		else:
-			ur = u
-			ul = -1 * u
-		lel = left.get_angle
-		rel = right.get.angle
-		left.go(ul)
-		right.go(ur)
-		left.update()
-		right.update()
-		le = left.get_angle
-		re = right.get.angle
-		D_right = rel - re
-		D_left = lel - le
-		e -= np.abs(D_right) #Или D_right, если они равны. Должны быть равны, иначе пока хз как это считать
-	left.stop()
-	right.stop()
-
-	
-
-
-  # ТВОЙ КОД ЗДЕСЬ
-  # КОГДА Я ПРИШЛЮ ТОЧКУ ОНА БУДЕТ ЗДЕСЬ point
-  # ТЫ МОЖЕШЬ ПОЛУЧИТЬ КООРДИНАТЫ point.x, point.y and point.z (z ВСЕГДА 0)
-  # ХЕНДЛЕР АСИНХРОННЫЙ. ЭТО ЗНАЧИТ, ЧТО ЕСЛИ ТЫ ПОЛУЧИШЬ НОВУЮ ТОЧКУ
-  # ЭТА ФУНКЦИЯ ОПЯТЬ ВЫЗОВЕТСЯ И БУДЕТ РАБОТАТЬ УЖЕ С НОВОЙ ТОЧКОЙ
+  navigate(point.x, point.y)
 
 
 def listen():
