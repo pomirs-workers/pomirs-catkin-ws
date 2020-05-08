@@ -41,8 +41,8 @@ def navigate(xEND, yEND):
   course = np.pi / 2
   width = 0.3
   previousTime = 0
-  angleL = left.get_angle()
-  angleR = right.get_angle()
+  angleL = 0
+  angleR = 0
   deg2rad = 0.0174533
   K_I = 50
 
@@ -93,6 +93,10 @@ def navigate(xEND, yEND):
     right.go(pwmRight)
 
     previousTime = currentTime
+
+    left.update()
+    right.update()
+
     angleL = left.get_angle()
     angleR = right.get_angle()
 
@@ -104,8 +108,7 @@ def listen():
 	rospy.init_node('runner')
 	rospy.Subscriber('points', Point, get_point_handler)
 	while not rospy.is_shutdown():
-		left.update()
-		right.update()
+    pass
 
 
 
