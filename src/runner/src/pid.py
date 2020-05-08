@@ -229,9 +229,7 @@ def get_point_handler(point):
 def listen():
   rospy.init_node('runner')
   rospy.Subscriber('points', Point, get_point_handler)
-  while not rospy.is_shutdown():
-    left.update()
-    right.update()
+  rospy.spin()
 
 
 if __name__ == '__main__':

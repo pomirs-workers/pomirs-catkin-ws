@@ -1,173 +1,79 @@
 #!/usr/bin/env python
-# coding: utf-8
 
-import time
-import numpy as np
-from math import pow, sqrt, atan
+import rospy
+from geometry_msgs.msg import Point
+from lib.catch_bot.motor import Motor
+from math import atan, sqrt, pi, fabs
 
-Y = 200
-X = 200
-H = 25
-Rk = 2.5
+Motor.apply_requirements()
+Motor.unlock_all()
 
-Tx = 20
-Ty = 20
+config_1 = {
+  'log': True,
+  'm_a': 37,
+  'm_b': 35,
+  'en_a': 24,
+  'en_b': 26,
+  'pin_pwm': 4,
+  'deg_per_tick': 37.5
+}
 
-# handler
+config_2 = {
+  'log': True,
+  'm_a': 38,
+  'm_b': 36,
+  'en_a': 31,
+  'en_b': 33,
+  'pin_pwm': 27,
+  'deg_per_tick': 37.5
+}
 
-x1 = point.x
-y1 = point.y
-while x1 == point.x and y1 == point.y:
-    time.sleep(0.1)
-x2 = point.x
-y2 = point.y
-xn = X / 2
-yn = Y / 2
+left = Motor(config_1)
+right = Motor(config_2)
 
+x0 = 20
+y0 = 20
+rk = 22
 
-# Поиск ближайшей к роботу точки на прямой
+def get_arc(angle):
+  return (2 * rk * pi) * (angle / (2 * pi))
 
-# In[6]:
-
-
-x4=((x2-x1)*(y2-y1)*(yn-y1)+x1*pow(y2-y1, 2)+xn*pow(x2-x1, 2))/(pow(y2-y1, 2)+pow(x2-x1, 2))
-y4=(y2-y1)*(x4-x1)/(x2-x1)+y1
-#print(x4,y4)
-
-
-# Поиск кратчайшего угла поворота и расстояния до точки (A, D)
-
-# In[7]:
-
-
-Tx = xn - x4
-Ty = yn - y4
-#Поиск длины пути до цели
-D = sqrt(Tx**2 + Ty**2)
-#Поиск кратчайшего угла поворота
-A = atan(np.abs(Tx)/np.abs(Ty))
-if Ty > 0:
-    A = np.pi - A
-if x4 > xn:
-    A = A * (-1)
-#print(math.degrees(A),D)
-
-
-# In[8]:
-
-
-#Read info about A, H, Rk, Distance(D) from file
-
-
-# Angle - необходимый угол поворота колес в градусах, H - расстояние между колесами, Rk - радиус колеса
-
-# In[9]:
-
-
-Angle = A * H * 180 / (2 * Rk * np.pi)
-D_angle = 0
-#print(Angle)
-
-
-# A > 0 - Влево (ul = -ur, ur > 0), A < 0 - Вправо (ur = -ul, ul > 0)
-
-# Поворот робота в сторону движения к точке на прямой по кратчайшему пути (по перпендикуляру к этой прямой)
-
-# In[19]:
-
-
-e = Angle
-mist = 15 #ошибка энкодера
-while np.abs(e) > mist :
-    u = e / Angle
-    if A > 0:
-        ur = u
-        ul = -1 * u
-    else:
-        ur = u
-        ul = -1 * u
-    lel = left.get_angle
-    rel = right.get.angle
-    left.go(ul)
-    right.go(ur)
+def handle(value):
+  while fabs(get_arc(left.get_angle())) < value:
     left.update()
     right.update()
-    le = left.get_angle
-    re = right.get.angle
-    D_right = rel - re
-    D_left = lel - le
-    e -= np.abs(D_right) #Или D_right, если они равны. Должны быть равны, иначе пока хз как это считать
-left.stop()
-right.stop()
+  left.stop()
+  right.stop()
+  left.reset()
+  right.reset()
+
+def get_point_handler(point):
+  x = point.x
+  y = point.y
+  angle = atan((y - y0) / (x - x0))
+  dist = sqrt((x - x0) ** 2 + (y - y0) ** 2)
+  arc = get_arc(angle)
+
+  coef = 1
+  if angle < 0:
+    coef = -1
+
+  left.go(0.3 * coef)
+  right.go(0.3 * -coef)
+
+  handle(arc)
+
+  left.go(1)
+  right.go(1)
+
+  handle(dist)
 
 
-# Движение робота к этой самой точке (то бишь на расстояни D)
-
-# In[1]:
-
-
-s = 0
-u = 0.1
-while D - s > 0:
-    u = (D - s) / D
-    lel = left.get_angle
-    rel = right.get.angle
-    left.go(u)
-    right.go(u)
-    left.update()
-    right.update()
-    le = left.get_angle
-    re = right.get.angle
-    D_right = rel - re
-    D_left = lel - le
-    s = 2 * np.pi * Rk * D_right/360
-left.stop()
-right.stop()
+def listen():
+  rospy.init_node('runner')
+  rospy.Subscriber('points', Point, get_point_handler)
+  rospy.spin()
 
 
-# Разворот робота по линии движения объекта. По сути формула та же, что и при повороте на высчитываемый угол, только мы точно знаем, что угол 90 градусов. Только необходим разворот по вектору движения объекта.
-
-# In[17]:
-
-
-if ((y2 - y1) * (x4 - xn) - (x2 - x1) * (y4 - yn)) > 0:
-    A = 90
-elif ((y2 - y1) * (x4 - xn) - (x2 - x1) * (y4 - yn)) < 0:
-    A = -90
-#print (A)
-
-
-# In[18]:
-
-
-Angle = A * H * 180 / (2 * Rk * np.pi)
-e = Angle
-mist = 15 #ошибка энкодера
-while np.abs(e) > mist:
-    u = e / Angle
-    if A > 0:
-        ur = u
-        ul = -1 * u
-    else:
-        ur = u
-        ul = -1 * u
-    lel = left.get_angle
-    rel = right.get.angle
-    left.go(ul)
-    right.go(ur)
-    left.update()
-    right.update()
-    le = left.get_angle
-    re = right.get.angle
-    D_right = rel - re
-    D_left = lel - le
-    e -= np.abs(D_right)
-left.stop()
-right.stop()
-
-
-# In[ ]:
-
-
-
-
+if __name__ == '__main__':
+  listen()
